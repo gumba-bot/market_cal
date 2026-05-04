@@ -3,8 +3,43 @@ document.addEventListener('DOMContentLoaded', () => {
   const totalCountEl = document.querySelector('.count-value');
   const totalPriceEl = document.querySelector('.price-value');
   const clearBtn = document.querySelector('.clear-btn');
+  const installBtn = document.querySelector('.install-btn');
 
   let items = [];
+  let deferredPrompt;
+
+  // PWA Support: Register Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').then((reg) => {
+      console.log('Service Worker registered successfully');
+    }).catch((err) => {
+      console.error('Service Worker registration failed:', err);
+    });
+  }
+
+  // Handle Install Prompt
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
+    // Update UI to notify the user they can install the PWA
+    installBtn.style.display = 'block';
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      // Show the install prompt
+      deferredPrompt.prompt();
+      // Wait for the user to respond to the prompt
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`User response to the install prompt: ${outcome}`);
+      // We've used the prompt, and can't use it again, throw it away
+      deferredPrompt = null;
+      // Hide the install button
+      installBtn.style.display = 'none';
+    }
+  });
 
   // Load from localStorage
   const saved = localStorage.getItem('market_cal_items');

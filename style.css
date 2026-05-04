@@ -70,6 +70,27 @@ body {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
+.header-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.install-btn {
+  background-color: #10B981;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.install-btn:hover {
+  background-color: #059669;
+}
+
 .table-container {
   display: flex;
   flex-direction: column;
